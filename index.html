@@ -1,0 +1,3252 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Korean word of the day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Cormorant+SC:wght@500&family=Noto+Serif+KR:wght@500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+body{display:flex;align-items:center;justify-content:center}
+:root{--u:min(calc(100vw/300),calc(100vh/190))}
+.card{box-sizing:border-box;width:calc(var(--u)*300);height:calc(var(--u)*190);background:#000;border:calc(var(--u)*1) solid #3a2f38;border-radius:calc(var(--u)*10);padding:calc(var(--u)*14) calc(var(--u)*16);text-align:center;cursor:pointer;display:flex;flex-direction:column;justify-content:center;align-items:center;user-select:none;-webkit-tap-highlight-color:transparent}
+.lab{font:500 calc(var(--u)*10)/1 'Cormorant SC',serif;letter-spacing:.18em;color:#8a7f88;text-transform:uppercase;margin-bottom:calc(var(--u)*8)}
+.w{font:500 calc(var(--u)*34)/1.15 'Noto Serif KR',serif;color:#E8A3CF}
+.rm{font:400 calc(var(--u)*15)/1.3 'Cormorant Garamond',serif;color:#f2eef1;margin-top:calc(var(--u)*4)}
+.rm span{color:#8a7f88}
+.hint{font:italic 400 calc(var(--u)*12)/1 'Cormorant Garamond',serif;color:#8a7f88;margin-top:calc(var(--u)*22)}
+.back{display:none;width:100%}
+.open .back{display:block}.open .hint{display:none}
+hr{border:0;border-top:1px solid #5a4a57;width:60%;margin:calc(var(--u)*9) auto}
+.ks{font:500 calc(var(--u)*13)/1.4 'Noto Serif KR',serif;color:#f2eef1}
+.sr{font:italic 400 calc(var(--u)*12)/1.3 'Cormorant Garamond',serif;color:#8a7f88;margin-top:calc(var(--u)*2)}
+.en{font:400 calc(var(--u)*13)/1.3 'Cormorant Garamond',serif;color:#cfc6cc;margin-top:calc(var(--u)*3)}
+.m{display:none}.open .m{display:inline}
+</style></head><body>
+<div class="card" id="c"><div class="lab">Word of the day</div>
+<div class="w" id="w"></div>
+<div class="rm"><span id="r"></span><span class="m"> · </span><span class="m" id="m" style="color:#f2eef1"></span></div>
+<div class="hint">tap to reveal</div>
+<div class="back"><hr><div class="ks" id="s"></div><div class="sr" id="sr"></div><div class="en" id="e"></div></div></div>
+<script>
+var WORDS=[
+{
+"k": "맛있다",
+"r": "masitda",
+"m": "to be delicious",
+"s": "이 떡볶이는 맛있어요.",
+"sr": "i tteokbokkineun masisseoyo.",
+"e": "This tteokbokki is delicious."
+},
+{
+"k": "강아지",
+"r": "gangaji",
+"m": "puppy",
+"s": "강아지가 꼬리를 흔들어요.",
+"sr": "gangajiga kkorireul heundeureoyo.",
+"e": "The puppy wags its tail."
+},
+{
+"k": "숟가락",
+"r": "sutgarak",
+"m": "spoon",
+"s": "숟가락이 필요해요.",
+"sr": "sutgaragi piryohaeyo.",
+"e": "I need a spoon."
+},
+{
+"k": "냉장고",
+"r": "naengjanggo",
+"m": "refrigerator",
+"s": "냉장고에 우유가 있어요.",
+"sr": "naengjanggoe uyuga isseoyo.",
+"e": "There's milk in the fridge."
+},
+{
+"k": "모르다",
+"r": "moreuda",
+"m": "to not know",
+"s": "저는 잘 몰라요.",
+"sr": "jeoneun jal mollayo.",
+"e": "I don't know well."
+},
+{
+"k": "잘 먹었습니다",
+"r": "jal meogeotseumnida",
+"m": "I ate well (after a meal)",
+"s": "잘 먹었습니다. 정말 맛있었어요.",
+"sr": "jal meogeotseumnida. jeongmal masisseosseoyo.",
+"e": "Thank you for the meal. It was really delicious."
+},
+{
+"k": "질문",
+"r": "jilmun",
+"m": "question",
+"s": "질문이 있어요.",
+"sr": "jilmuni isseoyo.",
+"e": "I have a question."
+},
+{
+"k": "제발",
+"r": "jebal",
+"m": "please (pleading)",
+"s": "제발 도와주세요.",
+"sr": "jebal dowajuseyo.",
+"e": "Please, help me."
+},
+{
+"k": "눈",
+"r": "nun",
+"m": "snow (also: eye)",
+"s": "눈이 오면 기분이 좋아요.",
+"sr": "nuni omyeon gibuni joayo.",
+"e": "I feel good when it snows."
+},
+{
+"k": "맑다",
+"r": "makda",
+"m": "to be clear",
+"s": "내일은 맑겠어요.",
+"sr": "naeireun makgesseoyo.",
+"e": "It will be clear tomorrow."
+},
+{
+"k": "굽다",
+"r": "gupda",
+"m": "to grill, to bake",
+"s": "빵을 오븐에 구워요.",
+"sr": "ppangeul obeune guwoyo.",
+"e": "I bake bread in the oven."
+},
+{
+"k": "그리고",
+"r": "geurigo",
+"m": "and, and then",
+"s": "밥을 먹고, 그리고 커피를 마셨어요.",
+"sr": "babeul meokgo, geurigo keopireul masyeosseoyo.",
+"e": "I ate, and then had coffee."
+},
+{
+"k": "간식",
+"r": "gansik",
+"m": "snack",
+"s": "간식으로 과자를 먹었어요.",
+"sr": "gansigeuro gwajareul meogeosseoyo.",
+"e": "I had cookies as a snack."
+},
+{
+"k": "뭐",
+"r": "mwo",
+"m": "what",
+"s": "뭐 먹고 싶어요?",
+"sr": "mwo meokgo sipeoyo?",
+"e": "What do you want to eat?"
+},
+{
+"k": "생각하다",
+"r": "saenggakada",
+"m": "to think",
+"s": "어떻게 생각해요?",
+"sr": "eotteoke saenggakaeyo?",
+"e": "What do you think?"
+},
+{
+"k": "피곤하다",
+"r": "pigonhada",
+"m": "to be tired",
+"s": "오늘 너무 피곤해요.",
+"sr": "oneul neomu pigonhaeyo.",
+"e": "I'm so tired today."
+},
+{
+"k": "시키다",
+"r": "sikida",
+"m": "to order (food)",
+"s": "치킨 시킬까요?",
+"sr": "chikin sikilkkayo?",
+"e": "Shall we order chicken?"
+},
+{
+"k": "왜",
+"r": "wae",
+"m": "why",
+"s": "왜 안 왔어요?",
+"sr": "wae an wasseoyo?",
+"e": "Why didn't you come?"
+},
+{
+"k": "나무",
+"r": "namu",
+"m": "tree",
+"s": "나무 아래에서 쉬어요.",
+"sr": "namu araeeseo swieoyo.",
+"e": "I rest under a tree."
+},
+{
+"k": "시작하다",
+"r": "sijakada",
+"m": "to start",
+"s": "수업이 시작해요.",
+"sr": "sueobi sijakaeyo.",
+"e": "Class is starting."
+},
+{
+"k": "사랑하다",
+"r": "saranghada",
+"m": "to love",
+"s": "가족을 사랑해요.",
+"sr": "gajogeul saranghaeyo.",
+"e": "I love my family."
+},
+{
+"k": "고기",
+"r": "gogi",
+"m": "meat",
+"s": "고기를 구워 먹어요.",
+"sr": "gogireul guwo meogeoyo.",
+"e": "We grill meat and eat it."
+},
+{
+"k": "작다",
+"r": "jakda",
+"m": "to be small",
+"s": "방이 작지만 아늑해요.",
+"sr": "bangi jakjiman aneukaeyo.",
+"e": "The room is small but cozy."
+},
+{
+"k": "재미없다",
+"r": "jaemieopda",
+"m": "to be boring",
+"s": "이 영화는 좀 재미없어요.",
+"sr": "i yeonghwaneun jom jaemieopseoyo.",
+"e": "This movie is a bit boring."
+},
+{
+"k": "차",
+"r": "cha",
+"m": "tea",
+"s": "따뜻한 차 한 잔 주세요.",
+"sr": "ttatteuthan cha han jan juseyo.",
+"e": "One warm tea, please."
+},
+{
+"k": "손",
+"r": "son",
+"m": "hand",
+"s": "손이 차가워요.",
+"sr": "soni chagawoyo.",
+"e": "My hands are cold."
+},
+{
+"k": "짧다",
+"r": "jjalda",
+"m": "to be short",
+"s": "치마가 짧아요.",
+"sr": "chimaga jjalbayo.",
+"e": "The skirt is short."
+},
+{
+"k": "뒤",
+"r": "dwi",
+"m": "back, behind",
+"s": "제 뒤에 서 주세요.",
+"sr": "je dwie seo juseyo.",
+"e": "Please stand behind me."
+},
+{
+"k": "우유",
+"r": "uyu",
+"m": "milk",
+"s": "우유를 한 잔 마셨어요.",
+"sr": "uyureul han jan masyeosseoyo.",
+"e": "I drank a glass of milk."
+},
+{
+"k": "문",
+"r": "mun",
+"m": "door",
+"s": "문을 열어 주세요.",
+"sr": "muneul yeoreo juseyo.",
+"e": "Please open the door."
+},
+{
+"k": "곧",
+"r": "got",
+"m": "soon",
+"s": "곧 도착해요.",
+"sr": "got dochakaeyo.",
+"e": "I'll arrive soon."
+},
+{
+"k": "하나",
+"r": "hana",
+"m": "one (native Korean)",
+"s": "커피 하나 주세요.",
+"sr": "keopi hana juseyo.",
+"e": "One coffee, please."
+},
+{
+"k": "쓰다",
+"r": "sseuda",
+"m": "to write",
+"s": "편지를 썼어요.",
+"sr": "pyeonjireul sseosseoyo.",
+"e": "I wrote a letter."
+},
+{
+"k": "주말",
+"r": "jumal",
+"m": "weekend",
+"s": "주말에 뭐 해요?",
+"sr": "jumare mwo haeyo?",
+"e": "What are you doing this weekend?"
+},
+{
+"k": "무섭다",
+"r": "museopda",
+"m": "to be scary, to be afraid",
+"s": "밤에 혼자 있으면 무서워요.",
+"sr": "bame honja isseumyeon museowoyo.",
+"e": "I'm scared when I'm alone at night."
+},
+{
+"k": "월급",
+"r": "wolgeup",
+"m": "salary",
+"s": "월급날이 기다려져요.",
+"sr": "wolgeumnari gidaryeojyeoyo.",
+"e": "I'm looking forward to payday."
+},
+{
+"k": "겨울",
+"r": "gyeoul",
+"m": "winter",
+"s": "겨울에는 따뜻한 차를 마셔요.",
+"sr": "gyeoureneun ttatteuthan chareul masyeoyo.",
+"e": "In winter I drink warm tea."
+},
+{
+"k": "끓이다",
+"r": "kkeurida",
+"m": "to boil",
+"s": "라면을 끓였어요.",
+"sr": "ramyeoneul kkeuryeosseoyo.",
+"e": "I boiled ramen."
+},
+{
+"k": "따뜻하다",
+"r": "ttatteuthada",
+"m": "to be warm",
+"s": "봄에는 날씨가 따뜻해요.",
+"sr": "bomeneun nalssiga ttatteuthaeyo.",
+"e": "The weather is warm in spring."
+},
+{
+"k": "가끔",
+"r": "gakkeum",
+"m": "sometimes",
+"s": "가끔 친구를 만나요.",
+"sr": "gakkeum chingureul mannayo.",
+"e": "I sometimes meet friends."
+},
+{
+"k": "배고프다",
+"r": "baegopeuda",
+"m": "to be hungry",
+"s": "아침을 안 먹어서 배고파요.",
+"sr": "achimeul an meogeoseo baegopayo.",
+"e": "I'm hungry because I skipped breakfast."
+},
+{
+"k": "귀엽다",
+"r": "gwiyeopda",
+"m": "to be cute",
+"s": "강아지가 너무 귀여워요.",
+"sr": "gangajiga neomu gwiyeowoyo.",
+"e": "The puppy is so cute."
+},
+{
+"k": "자다",
+"r": "jada",
+"m": "to sleep",
+"s": "어젯밤에 잘 잤어요.",
+"sr": "eojetbame jal jasseoyo.",
+"e": "I slept well last night."
+},
+{
+"k": "그런데",
+"r": "geureonde",
+"m": "but, by the way",
+"s": "그런데 어디에 가요?",
+"sr": "geureonde eodie gayo?",
+"e": "By the way, where are you going?"
+},
+{
+"k": "화이팅",
+"r": "hwaiting",
+"m": "you can do it!",
+"s": "시험 화이팅!",
+"sr": "siheom hwaiting!",
+"e": "You can do it on the exam!"
+},
+{
+"k": "화나다",
+"r": "hwanada",
+"m": "to get angry",
+"s": "너무 화가 나요.",
+"sr": "neomu hwaga nayo.",
+"e": "I'm so angry."
+},
+{
+"k": "현금",
+"r": "hyeongeum",
+"m": "cash",
+"s": "현금만 받아요.",
+"sr": "hyeongeumman badayo.",
+"e": "We only take cash."
+},
+{
+"k": "생선",
+"r": "saengseon",
+"m": "fish (as food)",
+"s": "저는 생선을 좋아해요.",
+"sr": "jeoneun saengseoneul joahaeyo.",
+"e": "I like fish."
+},
+{
+"k": "팔다",
+"r": "palda",
+"m": "to sell",
+"s": "이 가게는 꽃을 팔아요.",
+"sr": "i gageneun kkocheul parayo.",
+"e": "This shop sells flowers."
+},
+{
+"k": "벚꽃",
+"r": "beotkkot",
+"m": "cherry blossoms",
+"s": "봄에 벚꽃이 피어요.",
+"sr": "bome beotkkochi pieoyo.",
+"e": "Cherry blossoms bloom in spring."
+},
+{
+"k": "하지만",
+"r": "hajiman",
+"m": "however",
+"s": "비싸요. 하지만 예뻐요.",
+"sr": "bissayo. hajiman yeppeoyo.",
+"e": "It's expensive. But it's pretty."
+},
+{
+"k": "어제",
+"r": "eoje",
+"m": "yesterday",
+"s": "어제 영화를 봤어요.",
+"sr": "eoje yeonghwareul bwasseoyo.",
+"e": "I watched a movie yesterday."
+},
+{
+"k": "회의",
+"r": "hoeui",
+"m": "meeting",
+"s": "오후에 회의가 있어요.",
+"sr": "ohue hoeuiga isseoyo.",
+"e": "I have a meeting this afternoon."
+},
+{
+"k": "왼쪽",
+"r": "oenjjok",
+"m": "left side",
+"s": "왼쪽에 편의점이 있어요.",
+"sr": "oenjjoge pyeonuijeomi isseoyo.",
+"e": "There's a convenience store on the left."
+},
+{
+"k": "오래되다",
+"r": "oraedoeda",
+"m": "to be old (long-lasting)",
+"s": "이 건물은 오래됐어요.",
+"sr": "i geonmureun oraedwaesseoyo.",
+"e": "This building is old."
+},
+{
+"k": "날씨",
+"r": "nalssi",
+"m": "weather",
+"s": "오늘 날씨가 어때요?",
+"sr": "oneul nalssiga eottaeyo?",
+"e": "How's the weather today?"
+},
+{
+"k": "아니다",
+"r": "anida",
+"m": "to not be",
+"s": "아니에요, 괜찮아요.",
+"sr": "anieyo, gwaenchanayo.",
+"e": "No, it's okay."
+},
+{
+"k": "물",
+"r": "mul",
+"m": "water",
+"s": "물 한 잔 주세요.",
+"sr": "mul han jan juseyo.",
+"e": "One glass of water, please."
+},
+{
+"k": "넣다",
+"r": "neota",
+"m": "to put in",
+"s": "가방에 책을 넣었어요.",
+"sr": "gabange chaegeul neoeosseoyo.",
+"e": "I put a book in my bag."
+},
+{
+"k": "우산",
+"r": "usan",
+"m": "umbrella",
+"s": "비가 와요. 우산 있어요?",
+"sr": "biga wayo. usan isseoyo?",
+"e": "It's raining. Do you have an umbrella?"
+},
+{
+"k": "고양이",
+"r": "goyangi",
+"m": "cat",
+"s": "고양이가 창가에서 자요.",
+"sr": "goyangiga changgaeseo jayo.",
+"e": "The cat sleeps by the window."
+},
+{
+"k": "언니",
+"r": "eonni",
+"m": "older sister (said by a woman)",
+"s": "언니와 같이 쇼핑했어요.",
+"sr": "eonniwa gati syopinghaesseoyo.",
+"e": "I went shopping with my older sister."
+},
+{
+"k": "퇴근하다",
+"r": "toegeunhada",
+"m": "to leave work",
+"s": "여섯 시에 퇴근해요.",
+"sr": "yeoseot sie toegeunhaeyo.",
+"e": "I leave work at six."
+},
+{
+"k": "걷다",
+"r": "geotda",
+"m": "to walk",
+"s": "공원에서 걸었어요.",
+"sr": "gongwoneseo georeosseoyo.",
+"e": "I walked in the park."
+},
+{
+"k": "점심",
+"r": "jeomsim",
+"m": "lunch, noon",
+"s": "점심 먹으러 가요.",
+"sr": "jeomsim meogeureo gayo.",
+"e": "I'm going to eat lunch."
+},
+{
+"k": "내일",
+"r": "naeil",
+"m": "tomorrow",
+"s": "내일 만나요.",
+"sr": "naeil mannayo.",
+"e": "Let's meet tomorrow."
+},
+{
+"k": "다녀오겠습니다",
+"r": "danyeoogetseumnida",
+"m": "I'll go and come back",
+"s": "다녀오겠습니다!",
+"sr": "danyeoogetseumnida!",
+"e": "I'm heading out (and will be back)!"
+},
+{
+"k": "외롭다",
+"r": "oeropda",
+"m": "to be lonely",
+"s": "혼자 있으면 가끔 외로워요.",
+"sr": "honja isseumyeon gakkeum oerowoyo.",
+"e": "I sometimes feel lonely when I'm alone."
+},
+{
+"k": "읽다",
+"r": "ikda",
+"m": "to read",
+"s": "책을 읽는 걸 좋아해요.",
+"sr": "chaegeul ikneun geol joahaeyo.",
+"e": "I like reading books."
+},
+{
+"k": "시원하다",
+"r": "siwonhada",
+"m": "to be cool, refreshing",
+"s": "바람이 시원해요.",
+"sr": "barami siwonhaeyo.",
+"e": "The breeze is cool."
+},
+{
+"k": "지도",
+"r": "jido",
+"m": "map",
+"s": "지도를 보면서 걸어요.",
+"sr": "jidoreul bomyeonseo georeoyo.",
+"e": "I walk while looking at a map."
+},
+{
+"k": "사과",
+"r": "sagwa",
+"m": "apple",
+"s": "사과 두 개 주세요.",
+"sr": "sagwa du gae juseyo.",
+"e": "Two apples, please."
+},
+{
+"k": "봄",
+"r": "bom",
+"m": "spring",
+"s": "봄이 오면 산책을 하고 싶어요.",
+"sr": "bomi omyeon sanchaegeul hago sipeoyo.",
+"e": "When spring comes I want to take walks."
+},
+{
+"k": "카드",
+"r": "kadeu",
+"m": "card",
+"s": "카드로 계산할게요.",
+"sr": "kadeuro gyesanhalgeyo.",
+"e": "I'll pay by card."
+},
+{
+"k": "달",
+"r": "dal",
+"m": "moon",
+"s": "오늘 달이 정말 밝아요.",
+"sr": "oneul dari jeongmal balgayo.",
+"e": "The moon is really bright tonight."
+},
+{
+"k": "받다",
+"r": "batda",
+"m": "to receive",
+"s": "생일 선물을 받았어요.",
+"sr": "saengil seonmureul badasseoyo.",
+"e": "I received a birthday present."
+},
+{
+"k": "포장하다",
+"r": "pojanghada",
+"m": "to pack to go",
+"s": "이거 포장해 주세요.",
+"sr": "igeo pojanghae juseyo.",
+"e": "Please pack this to go."
+},
+{
+"k": "대박",
+"r": "daebak",
+"m": "awesome, wow",
+"s": "대박! 정말 멋져요!",
+"sr": "daebak! jeongmal meotjyeoyo!",
+"e": "Wow! That's amazing!"
+},
+{
+"k": "일",
+"r": "il",
+"m": "work, task",
+"s": "오늘 일이 너무 많아요.",
+"sr": "oneul iri neomu manayo.",
+"e": "I have too much work today."
+},
+{
+"k": "기쁘다",
+"r": "gippeuda",
+"m": "to be glad",
+"s": "좋은 소식을 들어서 기뻐요.",
+"sr": "joeun sosigeul deureoseo gippeoyo.",
+"e": "I'm glad to hear good news."
+},
+{
+"k": "공항",
+"r": "gonghang",
+"m": "airport",
+"s": "공항에 일찍 도착했어요.",
+"sr": "gonghange iljjik dochakaesseoyo.",
+"e": "I arrived at the airport early."
+},
+{
+"k": "출근하다",
+"r": "chulgeunhada",
+"m": "to go to work",
+"s": "아홉 시까지 출근해요.",
+"sr": "ahop sikkaji chulgeunhaeyo.",
+"e": "I go to work by nine."
+},
+{
+"k": "앨범",
+"r": "aelbeom",
+"m": "album",
+"s": "새 앨범이 나왔어요.",
+"sr": "sae aelbeomi nawasseoyo.",
+"e": "A new album came out."
+},
+{
+"k": "말하다",
+"r": "malhada",
+"m": "to speak",
+"s": "천천히 말해 주세요.",
+"sr": "cheoncheonhi malhae juseyo.",
+"e": "Please speak slowly."
+},
+{
+"k": "식당",
+"r": "sikdang",
+"m": "restaurant",
+"s": "이 식당은 유명해요.",
+"sr": "i sikdangeun yumyeonghaeyo.",
+"e": "This restaurant is famous."
+},
+{
+"k": "메뉴",
+"r": "menyu",
+"m": "menu",
+"s": "메뉴 좀 보여 주세요.",
+"sr": "menyu jom boyeo juseyo.",
+"e": "Please show me the menu."
+},
+{
+"k": "모자",
+"r": "moja",
+"m": "hat",
+"s": "모자를 쓰고 나갔어요.",
+"sr": "mojareul sseugo nagasseoyo.",
+"e": "I went out wearing a hat."
+},
+{
+"k": "친구",
+"r": "chingu",
+"m": "friend",
+"s": "친구와 영화를 봤어요.",
+"sr": "chinguwa yeonghwareul bwasseoyo.",
+"e": "I watched a movie with a friend."
+},
+{
+"k": "가족",
+"r": "gajok",
+"m": "family",
+"s": "가족과 같이 살아요.",
+"sr": "gajokgwa gati sarayo.",
+"e": "I live with my family."
+},
+{
+"k": "그림",
+"r": "geurim",
+"m": "picture, drawing",
+"s": "그림이 정말 예뻐요.",
+"sr": "geurimi jeongmal yeppeoyo.",
+"e": "The picture is really pretty."
+},
+{
+"k": "짜다",
+"r": "jjada",
+"m": "to be salty",
+"s": "국이 조금 짜요.",
+"sr": "gugi jogeum jjayo.",
+"e": "The soup is a little salty."
+},
+{
+"k": "설거지",
+"r": "seolgeoji",
+"m": "dishwashing",
+"s": "저녁 먹고 설거지를 해요.",
+"sr": "jeonyeok meokgo seolgeojireul haeyo.",
+"e": "I wash dishes after dinner."
+},
+{
+"k": "조용하다",
+"r": "joyonghada",
+"m": "to be quiet",
+"s": "도서관은 조용해요.",
+"sr": "doseogwaneun joyonghaeyo.",
+"e": "The library is quiet."
+},
+{
+"k": "치킨",
+"r": "chikin",
+"m": "fried chicken",
+"s": "치킨에 맥주가 최고예요.",
+"sr": "chikine maekjuga choegoyeyo.",
+"e": "Chicken with beer is the best."
+},
+{
+"k": "주다",
+"r": "juda",
+"m": "to give",
+"s": "이것 좀 주세요.",
+"sr": "igeot jom juseyo.",
+"e": "Please give me this."
+},
+{
+"k": "가볍다",
+"r": "gabyeopda",
+"m": "to be light",
+"s": "이 가방은 가벼워요.",
+"sr": "i gabangeun gabyeowoyo.",
+"e": "This bag is light."
+},
+{
+"k": "천천히",
+"r": "cheoncheonhi",
+"m": "slowly",
+"s": "천천히 걸어요.",
+"sr": "cheoncheonhi georeoyo.",
+"e": "I walk slowly."
+},
+{
+"k": "찍다",
+"r": "jjikda",
+"m": "to take (a photo)",
+"s": "여기서 사진 찍어도 돼요?",
+"sr": "yeogiseo sajin jjigeodo dwaeyo?",
+"e": "May I take photos here?"
+},
+{
+"k": "발",
+"r": "bal",
+"m": "foot",
+"s": "발이 아파요.",
+"sr": "bari apayo.",
+"e": "My feet hurt."
+},
+{
+"k": "밖",
+"r": "bak",
+"m": "outside",
+"s": "밖이 너무 추워요.",
+"sr": "bakki neomu chuwoyo.",
+"e": "It's very cold outside."
+},
+{
+"k": "이웃",
+"r": "iut",
+"m": "neighbor",
+"s": "이웃과 인사했어요.",
+"sr": "iutgwa insahaesseoyo.",
+"e": "I greeted my neighbor."
+},
+{
+"k": "무슨",
+"r": "museun",
+"m": "what kind of",
+"s": "무슨 음악을 좋아해요?",
+"sr": "museun eumageul joahaeyo?",
+"e": "What kind of music do you like?"
+},
+{
+"k": "중요하다",
+"r": "jungyohada",
+"m": "to be important",
+"s": "이 서류는 정말 중요해요.",
+"sr": "i seoryuneun jeongmal jungyohaeyo.",
+"e": "This document is really important."
+},
+{
+"k": "노래",
+"r": "norae",
+"m": "song",
+"s": "이 노래 정말 좋아요.",
+"sr": "i norae jeongmal joayo.",
+"e": "I really like this song."
+},
+{
+"k": "가수",
+"r": "gasu",
+"m": "singer",
+"s": "가수가 무대에 올라왔어요.",
+"sr": "gasuga mudaee ollawasseoyo.",
+"e": "The singer came up on stage."
+},
+{
+"k": "여름",
+"r": "yeoreum",
+"m": "summer",
+"s": "여름에는 바다에 가요.",
+"sr": "yeoreumeneun badae gayo.",
+"e": "In summer I go to the sea."
+},
+{
+"k": "생일",
+"r": "saengil",
+"m": "birthday",
+"s": "내일이 제 생일이에요.",
+"sr": "naeiri je saengirieyo.",
+"e": "Tomorrow is my birthday."
+},
+{
+"k": "밤",
+"r": "bam",
+"m": "night",
+"s": "밤에는 조용해요.",
+"sr": "bameneun joyonghaeyo.",
+"e": "It's quiet at night."
+},
+{
+"k": "옆",
+"r": "yeop",
+"m": "beside",
+"s": "은행 옆에 카페가 있어요.",
+"sr": "eunhaeng yeope kapega isseoyo.",
+"e": "There's a cafe next to the bank."
+},
+{
+"k": "졸리다",
+"r": "jollida",
+"m": "to be sleepy",
+"s": "점심을 먹고 나면 졸려요.",
+"sr": "jeomsimeul meokgo namyeon jollyeoyo.",
+"e": "I get sleepy after lunch."
+},
+{
+"k": "거의",
+"r": "geoui",
+"m": "almost",
+"s": "거의 다 왔어요.",
+"sr": "geoui da wasseoyo.",
+"e": "We're almost there."
+},
+{
+"k": "돌아오다",
+"r": "doraoda",
+"m": "to come back",
+"s": "집에 돌아왔어요.",
+"sr": "jibe dorawasseoyo.",
+"e": "I came back home."
+},
+{
+"k": "산",
+"r": "san",
+"m": "mountain",
+"s": "주말에 산에 가요.",
+"sr": "jumare sane gayo.",
+"e": "I go to the mountains on weekends."
+},
+{
+"k": "비",
+"r": "bi",
+"m": "rain",
+"s": "비가 많이 와요.",
+"sr": "biga mani wayo.",
+"e": "It's raining a lot."
+},
+{
+"k": "찾다",
+"r": "chatda",
+"m": "to find, to look for",
+"s": "열쇠를 찾고 있어요.",
+"sr": "yeolsoereul chatgo isseoyo.",
+"e": "I'm looking for my key."
+},
+{
+"k": "계속",
+"r": "gyesok",
+"m": "continuously",
+"s": "계속 비가 와요.",
+"sr": "gyesok biga wayo.",
+"e": "It keeps raining."
+},
+{
+"k": "고맙다",
+"r": "gomapda",
+"m": "to be thankful",
+"s": "도와줘서 고마워요.",
+"sr": "dowajwoseo gomawoyo.",
+"e": "Thanks for helping."
+},
+{
+"k": "켜다",
+"r": "kyeoda",
+"m": "to turn on",
+"s": "불을 켜 주세요.",
+"sr": "bureul kyeo juseyo.",
+"e": "Please turn on the light."
+},
+{
+"k": "빵",
+"r": "ppang",
+"m": "bread",
+"s": "아침에 빵을 먹어요.",
+"sr": "achime ppangeul meogeoyo.",
+"e": "I eat bread in the morning."
+},
+{
+"k": "계산하다",
+"r": "gyesanhada",
+"m": "to pay the bill",
+"s": "제가 계산할게요.",
+"sr": "jega gyesanhalgeyo.",
+"e": "I'll pay."
+},
+{
+"k": "끝나다",
+"r": "kkeutnada",
+"m": "to end",
+"s": "수업이 끝났어요.",
+"sr": "sueobi kkeutnasseoyo.",
+"e": "Class has ended."
+},
+{
+"k": "꼭",
+"r": "kkok",
+"m": "definitely",
+"s": "꼭 연락하세요.",
+"sr": "kkok yeonrakaseyo.",
+"e": "Be sure to get in touch."
+},
+{
+"k": "그래서",
+"r": "geuraeseo",
+"m": "so, therefore",
+"s": "비가 왔어요. 그래서 집에 있었어요.",
+"sr": "biga wasseoyo. geuraeseo jibe isseosseoyo.",
+"e": "It rained. So I stayed home."
+},
+{
+"k": "나쁘다",
+"r": "nappeuda",
+"m": "to be bad",
+"s": "기분이 나빠요.",
+"sr": "gibuni nappayo.",
+"e": "I feel bad."
+},
+{
+"k": "많다",
+"r": "manta",
+"m": "to be many",
+"s": "할 일이 많아요.",
+"sr": "hal iri manayo.",
+"e": "I have a lot to do."
+},
+{
+"k": "신발",
+"r": "sinbal",
+"m": "shoes",
+"s": "신발이 너무 작아요.",
+"sr": "sinbari neomu jagayo.",
+"e": "The shoes are too small."
+},
+{
+"k": "놓다",
+"r": "nota",
+"m": "to put down",
+"s": "책상 위에 놓아 주세요.",
+"sr": "chaeksang wie noa juseyo.",
+"e": "Please put it on the desk."
+},
+{
+"k": "어떻게",
+"r": "eotteoke",
+"m": "how",
+"s": "어떻게 가요?",
+"sr": "eotteoke gayo?",
+"e": "How do I get there?"
+},
+{
+"k": "열쇠",
+"r": "yeolsoe",
+"m": "key",
+"s": "열쇠가 어디 있어요?",
+"sr": "yeolsoega eodi isseoyo?",
+"e": "Where is the key?"
+},
+{
+"k": "과일",
+"r": "gwail",
+"m": "fruit",
+"s": "후식으로 과일을 먹어요.",
+"sr": "husigeuro gwaireul meogeoyo.",
+"e": "I eat fruit for dessert."
+},
+{
+"k": "멀다",
+"r": "meolda",
+"m": "to be far",
+"s": "집에서 학교까지 멀어요.",
+"sr": "jibeseo hakgyokkaji meoreoyo.",
+"e": "It's far from home to school."
+},
+{
+"k": "가방",
+"r": "gabang",
+"m": "bag",
+"s": "가방이 무거워요.",
+"sr": "gabangi mugeowoyo.",
+"e": "The bag is heavy."
+},
+{
+"k": "자주",
+"r": "jaju",
+"m": "often",
+"s": "자주 커피를 마셔요.",
+"sr": "jaju keopireul masyeoyo.",
+"e": "I often drink coffee."
+},
+{
+"k": "술",
+"r": "sul",
+"m": "alcohol",
+"s": "저는 술을 잘 못 마셔요.",
+"sr": "jeoneun sureul jal mot masyeoyo.",
+"e": "I can't drink alcohol well."
+},
+{
+"k": "언제",
+"r": "eonje",
+"m": "when",
+"s": "언제 만날까요?",
+"sr": "eonje mannalkkayo?",
+"e": "When shall we meet?"
+},
+{
+"k": "뜨개질",
+"r": "tteugaejil",
+"m": "knitting, crocheting",
+"s": "뜨개질을 하면 마음이 편해요.",
+"sr": "tteugaejireul hamyeon maeumi pyeonhaeyo.",
+"e": "I feel calm when I crochet."
+},
+{
+"k": "대답하다",
+"r": "daedapada",
+"m": "to answer",
+"s": "빨리 대답해 주세요.",
+"sr": "ppalli daedapae juseyo.",
+"e": "Please answer quickly."
+},
+{
+"k": "숙제",
+"r": "sukje",
+"m": "homework",
+"s": "숙제가 너무 많아요.",
+"sr": "sukjega neomu manayo.",
+"e": "I have too much homework."
+},
+{
+"k": "비밀번호",
+"r": "bimilbeonho",
+"m": "password",
+"s": "비밀번호를 잊어버렸어요.",
+"sr": "bimilbeonhoreul ijeobeoryeosseoyo.",
+"e": "I forgot my password."
+},
+{
+"k": "드라마",
+"r": "deurama",
+"m": "drama",
+"s": "드라마를 보면서 한국어를 배워요.",
+"sr": "deuramareul bomyeonseo hangugeoreul baewoyo.",
+"e": "I learn Korean while watching dramas."
+},
+{
+"k": "부끄럽다",
+"r": "bukkeureopda",
+"m": "to be shy, to be embarrassed",
+"s": "너무 부끄러워서 얼굴이 빨개졌어요.",
+"sr": "neomu bukkeureowoseo eolguri ppalgaejyeosseoyo.",
+"e": "I was so embarrassed my face turned red."
+},
+{
+"k": "병원",
+"r": "byeongwon",
+"m": "hospital",
+"s": "병원에 가야 해요.",
+"sr": "byeongwone gaya haeyo.",
+"e": "I need to go to the hospital."
+},
+{
+"k": "하늘",
+"r": "haneul",
+"m": "sky",
+"s": "하늘이 정말 맑아요.",
+"sr": "haneuri jeongmal malgayo.",
+"e": "The sky is really clear."
+},
+{
+"k": "특별하다",
+"r": "teukbyeolhada",
+"m": "to be special",
+"s": "오늘은 특별한 날이에요.",
+"sr": "oneureun teukbyeolhan narieyo.",
+"e": "Today is a special day."
+},
+{
+"k": "나가다",
+"r": "nagada",
+"m": "to go out",
+"s": "밖으로 나갔어요.",
+"sr": "bakkeuro nagasseoyo.",
+"e": "I went outside."
+},
+{
+"k": "주문하다",
+"r": "jumunhada",
+"m": "to order",
+"s": "지금 주문할게요.",
+"sr": "jigeum jumunhalgeyo.",
+"e": "I'll order now."
+},
+{
+"k": "새",
+"r": "sae",
+"m": "bird",
+"s": "새가 노래해요.",
+"sr": "saega noraehaeyo.",
+"e": "The bird sings."
+},
+{
+"k": "마시다",
+"r": "masida",
+"m": "to drink",
+"s": "커피를 마시고 싶어요.",
+"sr": "keopireul masigo sipeoyo.",
+"e": "I want to drink coffee."
+},
+{
+"k": "안개",
+"r": "angae",
+"m": "fog",
+"s": "안개가 껴서 앞이 안 보여요.",
+"sr": "angaega kkyeoseo api an boyeoyo.",
+"e": "It's foggy and I can't see ahead."
+},
+{
+"k": "책",
+"r": "chaek",
+"m": "book",
+"s": "이 책이 재미있어요.",
+"sr": "i chaegi jaemiisseoyo.",
+"e": "This book is interesting."
+},
+{
+"k": "가격",
+"r": "gagyeok",
+"m": "price",
+"s": "가격이 얼마예요?",
+"sr": "gagyeogi eolmayeyo?",
+"e": "What's the price?"
+},
+{
+"k": "저녁",
+"r": "jeonyeok",
+"m": "evening",
+"s": "저녁에 가족과 밥을 먹어요.",
+"sr": "jeonyeoge gajokgwa babeul meogeoyo.",
+"e": "I eat dinner with my family in the evening."
+},
+{
+"k": "기억하다",
+"r": "gieokada",
+"m": "to remember",
+"s": "그날을 아직 기억해요.",
+"sr": "geunareul ajik gieokaeyo.",
+"e": "I still remember that day."
+},
+{
+"k": "위",
+"r": "wi",
+"m": "above, on top",
+"s": "책이 책상 위에 있어요.",
+"sr": "chaegi chaeksang wie isseoyo.",
+"e": "The book is on the desk."
+},
+{
+"k": "산책하다",
+"r": "sanchaekada",
+"m": "to take a walk",
+"s": "저녁에 산책해요.",
+"sr": "jeonyeoge sanchaekaeyo.",
+"e": "I take a walk in the evening."
+},
+{
+"k": "돈",
+"r": "don",
+"m": "money",
+"s": "지갑에 돈이 없어요.",
+"sr": "jigabe doni eopseoyo.",
+"e": "There's no money in my wallet."
+},
+{
+"k": "옷",
+"r": "ot",
+"m": "clothes",
+"s": "새 옷이 마음에 들어요.",
+"sr": "sae osi maeume deureoyo.",
+"e": "I like my new clothes."
+},
+{
+"k": "춥다",
+"r": "chupda",
+"m": "to be cold (weather)",
+"s": "겨울에는 너무 추워요.",
+"sr": "gyeoureneun neomu chuwoyo.",
+"e": "It's so cold in winter."
+},
+{
+"k": "알다",
+"r": "alda",
+"m": "to know",
+"s": "그 노래 알아요?",
+"sr": "geu norae arayo?",
+"e": "Do you know that song?"
+},
+{
+"k": "오른쪽",
+"r": "oreunjjok",
+"m": "right side",
+"s": "오른쪽으로 가세요.",
+"sr": "oreunjjogeuro gaseyo.",
+"e": "Please go to the right."
+},
+{
+"k": "휴대폰",
+"r": "hyudaepon",
+"m": "cell phone",
+"s": "휴대폰을 집에 두고 왔어요.",
+"sr": "hyudaeponeul jibe dugo wasseoyo.",
+"e": "I left my phone at home."
+},
+{
+"k": "신다",
+"r": "sinda",
+"m": "to wear (on the feet)",
+"s": "운동화를 신고 가요.",
+"sr": "undonghwareul singo gayo.",
+"e": "I go wearing sneakers."
+},
+{
+"k": "너무",
+"r": "neomu",
+"m": "too, so",
+"s": "너무 많아요.",
+"sr": "neomu manayo.",
+"e": "There are too many."
+},
+{
+"k": "싸다",
+"r": "ssada",
+"m": "to be cheap",
+"s": "여기는 값이 싸요.",
+"sr": "yeogineun gapsi ssayo.",
+"e": "It's cheap here."
+},
+{
+"k": "영수증",
+"r": "yeongsujeung",
+"m": "receipt",
+"s": "영수증 필요하세요?",
+"sr": "yeongsujeung piryohaseyo?",
+"e": "Do you need a receipt?"
+},
+{
+"k": "복잡하다",
+"r": "bokjapada",
+"m": "to be crowded, to be complicated",
+"s": "지하철이 너무 복잡해요.",
+"sr": "jihacheori neomu bokjapaeyo.",
+"e": "The subway is so crowded."
+},
+{
+"k": "안",
+"r": "an",
+"m": "inside",
+"s": "가방 안에 우산이 있어요.",
+"sr": "gabang ane usani isseoyo.",
+"e": "There's an umbrella inside the bag."
+},
+{
+"k": "꽃",
+"r": "kkot",
+"m": "flower",
+"s": "꽃을 선물 받았어요.",
+"sr": "kkocheul seonmul badasseoyo.",
+"e": "I received flowers as a gift."
+},
+{
+"k": "별",
+"r": "byeol",
+"m": "star",
+"s": "밤하늘에 별이 많아요.",
+"sr": "bamhaneure byeori manayo.",
+"e": "There are many stars in the night sky."
+},
+{
+"k": "이메일",
+"r": "imeil",
+"m": "email",
+"s": "이메일을 보냈어요.",
+"sr": "imeireul bonaesseoyo.",
+"e": "I sent an email."
+},
+{
+"k": "내리다",
+"r": "naerida",
+"m": "to get off",
+"s": "어디에서 내려요?",
+"sr": "eodieseo naeryeoyo?",
+"e": "Where do you get off?"
+},
+{
+"k": "아름답다",
+"r": "areumdapda",
+"m": "to be beautiful",
+"s": "풍경이 정말 아름다워요.",
+"sr": "punggyeongi jeongmal areumdawoyo.",
+"e": "The scenery is really beautiful."
+},
+{
+"k": "집",
+"r": "jip",
+"m": "house, home",
+"s": "집에 가고 싶어요.",
+"sr": "jibe gago sipeoyo.",
+"e": "I want to go home."
+},
+{
+"k": "들다",
+"r": "deulda",
+"m": "to hold, to lift",
+"s": "이 가방 좀 들어 주세요.",
+"sr": "i gabang jom deureo juseyo.",
+"e": "Please hold this bag."
+},
+{
+"k": "올해",
+"r": "olhae",
+"m": "this year",
+"s": "올해는 여행을 많이 하고 싶어요.",
+"sr": "olhaeneun yeohaengeul mani hago sipeoyo.",
+"e": "This year I want to travel a lot."
+},
+{
+"k": "없다",
+"r": "eopda",
+"m": "to not exist, to not have",
+"s": "지금은 자리가 없어요.",
+"sr": "jigeumeun jariga eopseoyo.",
+"e": "There are no seats right now."
+},
+{
+"k": "아마",
+"r": "ama",
+"m": "perhaps",
+"s": "아마 내일 올 거예요.",
+"sr": "ama naeil ol geoyeyo.",
+"e": "He'll probably come tomorrow."
+},
+{
+"k": "라면",
+"r": "ramyeon",
+"m": "ramen (instant noodles)",
+"s": "비 오는 날에는 라면이 생각나요.",
+"sr": "bi oneun nareneun ramyeoni saenggaknayo.",
+"e": "On rainy days I think of ramen."
+},
+{
+"k": "버스",
+"r": "beoseu",
+"m": "bus",
+"s": "버스가 곧 와요.",
+"sr": "beoseuga got wayo.",
+"e": "The bus is coming soon."
+},
+{
+"k": "혼자",
+"r": "honja",
+"m": "alone",
+"s": "혼자 여행해요.",
+"sr": "honja yeohaenghaeyo.",
+"e": "I travel alone."
+},
+{
+"k": "끄다",
+"r": "kkeuda",
+"m": "to turn off",
+"s": "텔레비전을 껐어요.",
+"sr": "tellebijeoneul kkeosseoyo.",
+"e": "I turned off the TV."
+},
+{
+"k": "재미있다",
+"r": "jaemiitda",
+"m": "to be fun",
+"s": "이 드라마 정말 재미있어요.",
+"sr": "i deurama jeongmal jaemiisseoyo.",
+"e": "This drama is really fun."
+},
+{
+"k": "어둡다",
+"r": "eodupda",
+"m": "to be dark",
+"s": "밤이라서 어두워요.",
+"sr": "bamiraseo eoduwoyo.",
+"e": "It's dark because it's night."
+},
+{
+"k": "쉬다",
+"r": "swida",
+"m": "to rest",
+"s": "오늘은 집에서 쉬고 싶어요.",
+"sr": "oneureun jibeseo swigo sipeoyo.",
+"e": "I want to rest at home today."
+},
+{
+"k": "목소리",
+"r": "moksori",
+"m": "voice",
+"s": "목소리가 정말 좋아요.",
+"sr": "moksoriga jeongmal joayo.",
+"e": "Your voice is really nice."
+},
+{
+"k": "보다",
+"r": "boda",
+"m": "to see, to watch",
+"s": "드라마를 봐요.",
+"sr": "deuramareul bwayo.",
+"e": "I watch a drama."
+},
+{
+"k": "듣다",
+"r": "deutda",
+"m": "to listen",
+"s": "저는 라디오를 자주 들어요.",
+"sr": "jeoneun radioreul jaju deureoyo.",
+"e": "I often listen to the radio."
+},
+{
+"k": "단어",
+"r": "daneo",
+"m": "word, vocabulary",
+"s": "새 단어를 외웠어요.",
+"sr": "sae daneoreul oewosseoyo.",
+"e": "I memorized new words."
+},
+{
+"k": "보내다",
+"r": "bonaeda",
+"m": "to send",
+"s": "문자를 보냈어요.",
+"sr": "munjareul bonaesseoyo.",
+"e": "I sent a text message."
+},
+{
+"k": "보고 싶다",
+"r": "bogo sipda",
+"m": "to miss (someone)",
+"s": "보고 싶어요.",
+"sr": "bogo sipeoyo.",
+"e": "I miss you."
+},
+{
+"k": "아직",
+"r": "ajik",
+"m": "still, not yet",
+"s": "아직 안 왔어요.",
+"sr": "ajik an wasseoyo.",
+"e": "He hasn't come yet."
+},
+{
+"k": "얼마",
+"r": "eolma",
+"m": "how much",
+"s": "이거 얼마예요?",
+"sr": "igeo eolmayeyo?",
+"e": "How much is this?"
+},
+{
+"k": "축하하다",
+"r": "chukahada",
+"m": "to congratulate",
+"s": "생일 축하해요!",
+"sr": "saengil chukahaeyo!",
+"e": "Happy birthday!"
+},
+{
+"k": "그리다",
+"r": "geurida",
+"m": "to draw",
+"s": "그림을 그려요.",
+"sr": "geurimeul geuryeoyo.",
+"e": "I draw pictures."
+},
+{
+"k": "배부르다",
+"r": "baebureuda",
+"m": "to be full",
+"s": "많이 먹어서 배불러요.",
+"sr": "mani meogeoseo baebulleoyo.",
+"e": "I ate a lot, so I'm full."
+},
+{
+"k": "달콤하다",
+"r": "dalkomhada",
+"m": "to be sweet (pleasantly)",
+"s": "이 커피는 달콤해요.",
+"sr": "i keopineun dalkomhaeyo.",
+"e": "This coffee is sweet."
+},
+{
+"k": "시험",
+"r": "siheom",
+"m": "exam",
+"s": "내일 시험이 있어요.",
+"sr": "naeil siheomi isseoyo.",
+"e": "I have an exam tomorrow."
+},
+{
+"k": "아래",
+"r": "arae",
+"m": "below",
+"s": "아래층으로 내려가요.",
+"sr": "araecheungeuro naeryeogayo.",
+"e": "I go down to the lower floor."
+},
+{
+"k": "사다",
+"r": "sada",
+"m": "to buy",
+"s": "새 신발을 샀어요.",
+"sr": "sae sinbareul sasseoyo.",
+"e": "I bought new shoes."
+},
+{
+"k": "뜨겁다",
+"r": "tteugeopda",
+"m": "to be hot to the touch",
+"s": "조심하세요. 아주 뜨거워요.",
+"sr": "josimhaseyo. aju tteugeowoyo.",
+"e": "Be careful. It's very hot."
+},
+{
+"k": "다시",
+"r": "dasi",
+"m": "again",
+"s": "다시 한번 말해 주세요.",
+"sr": "dasi hanbeon malhae juseyo.",
+"e": "Please say it once more."
+},
+{
+"k": "불편하다",
+"r": "bulpyeonhada",
+"m": "to be inconvenient",
+"s": "여기는 교통이 불편해요.",
+"sr": "yeogineun gyotongi bulpyeonhaeyo.",
+"e": "Transportation here is inconvenient."
+},
+{
+"k": "얼굴",
+"r": "eolgul",
+"m": "face",
+"s": "세수하고 얼굴을 닦았어요.",
+"sr": "sesuhago eolgureul dakkasseoyo.",
+"e": "I washed up and dried my face."
+},
+{
+"k": "하다",
+"r": "hada",
+"m": "to do",
+"s": "오늘 숙제를 해요.",
+"sr": "oneul sukjereul haeyo.",
+"e": "I'm doing my homework today."
+},
+{
+"k": "딸기",
+"r": "ttalgi",
+"m": "strawberry",
+"s": "딸기가 제철이에요.",
+"sr": "ttalgiga jecheorieyo.",
+"e": "Strawberries are in season."
+},
+{
+"k": "묻다",
+"r": "mutda",
+"m": "to ask",
+"s": "길을 물어봤어요.",
+"sr": "gireul mureobwasseoyo.",
+"e": "I asked for directions."
+},
+{
+"k": "다리",
+"r": "dari",
+"m": "leg, bridge",
+"s": "한강에는 다리가 많아요.",
+"sr": "hangangeneun dariga manayo.",
+"e": "There are many bridges over the Han River."
+},
+{
+"k": "전화",
+"r": "jeonhwa",
+"m": "phone call",
+"s": "전화가 왔어요.",
+"sr": "jeonhwaga wasseoyo.",
+"e": "A call came in."
+},
+{
+"k": "쓰레기",
+"r": "sseuregi",
+"m": "trash",
+"s": "쓰레기를 버려야 해요.",
+"sr": "sseuregireul beoryeoya haeyo.",
+"e": "I need to throw out the trash."
+},
+{
+"k": "책상",
+"r": "chaeksang",
+"m": "desk",
+"s": "책상이 너무 어지러워요.",
+"sr": "chaeksangi neomu eojireowoyo.",
+"e": "My desk is too messy."
+},
+{
+"k": "타다",
+"r": "tada",
+"m": "to ride, to get on",
+"s": "버스를 타고 가요.",
+"sr": "beoseureul tago gayo.",
+"e": "I go by bus."
+},
+{
+"k": "기다리다",
+"r": "gidarida",
+"m": "to wait",
+"s": "버스를 십 분 기다렸어요.",
+"sr": "beoseureul sip bun gidaryeosseoyo.",
+"e": "I waited ten minutes for the bus."
+},
+{
+"k": "만들다",
+"r": "mandeulda",
+"m": "to make",
+"s": "케이크를 만들었어요.",
+"sr": "keikeureul mandeureosseoyo.",
+"e": "I made a cake."
+},
+{
+"k": "달다",
+"r": "dalda",
+"m": "to be sweet",
+"s": "이 케이크는 너무 달아요.",
+"sr": "i keikeuneun neomu darayo.",
+"e": "This cake is too sweet."
+},
+{
+"k": "엄마",
+"r": "eomma",
+"m": "mom",
+"s": "엄마한테 전화했어요.",
+"sr": "eommahante jeonhwahaesseoyo.",
+"e": "I called my mom."
+},
+{
+"k": "웃기다",
+"r": "utgida",
+"m": "to be funny",
+"s": "그 사람 정말 웃겨요.",
+"sr": "geu saram jeongmal utgyeoyo.",
+"e": "That person is really funny."
+},
+{
+"k": "더럽다",
+"r": "deoreopda",
+"m": "to be dirty",
+"s": "손이 더러워요.",
+"sr": "soni deoreowoyo.",
+"e": "My hands are dirty."
+},
+{
+"k": "새롭다",
+"r": "saeropda",
+"m": "to be new",
+"s": "새로운 노래가 나왔어요.",
+"sr": "saeroun noraega nawasseoyo.",
+"e": "A new song came out."
+},
+{
+"k": "오다",
+"r": "oda",
+"m": "to come",
+"s": "친구가 우리 집에 와요.",
+"sr": "chinguga uri jibe wayo.",
+"e": "My friend is coming to my house."
+},
+{
+"k": "바쁘다",
+"r": "bappeuda",
+"m": "to be busy",
+"s": "요즘 너무 바빠요.",
+"sr": "yojeum neomu bappayo.",
+"e": "I'm so busy these days."
+},
+{
+"k": "강",
+"r": "gang",
+"m": "river",
+"s": "강 옆에서 산책해요.",
+"sr": "gang yeopeseo sanchaekaeyo.",
+"e": "I take walks by the river."
+},
+{
+"k": "문장",
+"r": "munjang",
+"m": "sentence",
+"s": "이 문장은 어려워요.",
+"sr": "i munjangeun eoryeowoyo.",
+"e": "This sentence is difficult."
+},
+{
+"k": "애인",
+"r": "aein",
+"m": "partner, sweetheart",
+"s": "애인이 생겼어요.",
+"sr": "aeini saenggyeosseoyo.",
+"e": "I got a sweetheart."
+},
+{
+"k": "외우다",
+"r": "oeuda",
+"m": "to memorize",
+"s": "매일 단어를 열 개씩 외워요.",
+"sr": "maeil daneoreul yeol gaessik oewoyo.",
+"e": "I memorize ten words every day."
+},
+{
+"k": "맛",
+"r": "mat",
+"m": "taste, flavor",
+"s": "이 집은 맛이 좋아요.",
+"sr": "i jibeun masi joayo.",
+"e": "This place tastes good."
+},
+{
+"k": "진짜",
+"r": "jinjja",
+"m": "really, truly",
+"s": "진짜 맛있어요.",
+"sr": "jinjja masisseoyo.",
+"e": "It's really delicious."
+},
+{
+"k": "머리",
+"r": "meori",
+"m": "head, hair",
+"s": "머리를 잘랐어요.",
+"sr": "meorireul jallasseoyo.",
+"e": "I got a haircut."
+},
+{
+"k": "항상",
+"r": "hangsang",
+"m": "always",
+"s": "그는 항상 웃어요.",
+"sr": "geuneun hangsang useoyo.",
+"e": "He always smiles."
+},
+{
+"k": "들어가다",
+"r": "deureogada",
+"m": "to go in",
+"s": "안으로 들어가세요.",
+"sr": "aneuro deureogaseyo.",
+"e": "Please go inside."
+},
+{
+"k": "나중에",
+"r": "najunge",
+"m": "later",
+"s": "나중에 다시 전화할게요.",
+"sr": "najunge dasi jeonhwahalgeyo.",
+"e": "I'll call again later."
+},
+{
+"k": "아빠",
+"r": "appa",
+"m": "dad",
+"s": "아빠는 회사에 가셨어요.",
+"sr": "appaneun hoesae gasyeosseoyo.",
+"e": "Dad went to work."
+},
+{
+"k": "김치",
+"r": "gimchi",
+"m": "kimchi",
+"s": "김치가 없으면 밥을 못 먹어요.",
+"sr": "gimchiga eopseumyeon babeul mot meogeoyo.",
+"e": "I can't eat a meal without kimchi."
+},
+{
+"k": "시장",
+"r": "sijang",
+"m": "market",
+"s": "시장에서 과일을 샀어요.",
+"sr": "sijangeseo gwaireul sasseoyo.",
+"e": "I bought fruit at the market."
+},
+{
+"k": "먼저",
+"r": "meonjeo",
+"m": "first, ahead",
+"s": "먼저 갈게요.",
+"sr": "meonjeo galgeyo.",
+"e": "I'll go ahead first."
+},
+{
+"k": "비행기",
+"r": "bihaenggi",
+"m": "airplane",
+"s": "비행기 표를 샀어요.",
+"sr": "bihaenggi pyoreul sasseoyo.",
+"e": "I bought a plane ticket."
+},
+{
+"k": "귀",
+"r": "gwi",
+"m": "ear",
+"s": "귀에 이어폰을 꽂았어요.",
+"sr": "gwie ieoponeul kkojasseoyo.",
+"e": "I put earphones in my ears."
+},
+{
+"k": "먹다",
+"r": "meokda",
+"m": "to eat",
+"s": "저녁에 뭐 먹을까요?",
+"sr": "jeonyeoge mwo meogeulkkayo?",
+"e": "What should we eat for dinner?"
+},
+{
+"k": "불",
+"r": "bul",
+"m": "light, fire",
+"s": "방에 불이 꺼졌어요.",
+"sr": "bange buri kkeojyeosseoyo.",
+"e": "The light in the room went out."
+},
+{
+"k": "시계",
+"r": "sigye",
+"m": "clock, watch",
+"s": "시계가 고장 났어요.",
+"sr": "sigyega gojang nasseoyo.",
+"e": "The watch is broken."
+},
+{
+"k": "똑같다",
+"r": "ttokgatda",
+"m": "to be the same",
+"s": "우리 취향이 똑같아요.",
+"sr": "uri chwihyangi ttokgatayo.",
+"e": "Our tastes are the same."
+},
+{
+"k": "팬",
+"r": "paen",
+"m": "fan",
+"s": "저는 그 가수의 팬이에요.",
+"sr": "jeoneun geu gasuui paenieyo.",
+"e": "I'm a fan of that singer."
+},
+{
+"k": "음악",
+"r": "eumak",
+"m": "music",
+"s": "음악을 들으면서 걸어요.",
+"sr": "eumageul deureumyeonseo georeoyo.",
+"e": "I walk while listening to music."
+},
+{
+"k": "배우",
+"r": "baeu",
+"m": "actor",
+"s": "그 배우를 좋아해요.",
+"sr": "geu baeureul joahaeyo.",
+"e": "I like that actor."
+},
+{
+"k": "택시",
+"r": "taeksi",
+"m": "taxi",
+"s": "늦어서 택시를 탔어요.",
+"sr": "neujeoseo taeksireul tasseoyo.",
+"e": "I was late, so I took a taxi."
+},
+{
+"k": "구름",
+"r": "gureum",
+"m": "cloud",
+"s": "구름이 많아요.",
+"sr": "gureumi manayo.",
+"e": "There are many clouds."
+},
+{
+"k": "무대",
+"r": "mudae",
+"m": "stage",
+"s": "무대가 정말 화려해요.",
+"sr": "mudaega jeongmal hwaryeohaeyo.",
+"e": "The stage is really splendid."
+},
+{
+"k": "잠깐",
+"r": "jamkkan",
+"m": "a moment",
+"s": "잠깐만 기다려 주세요.",
+"sr": "jamkkanman gidaryeo juseyo.",
+"e": "Please wait a moment."
+},
+{
+"k": "오늘",
+"r": "oneul",
+"m": "today",
+"s": "오늘 날씨가 좋아요.",
+"sr": "oneul nalssiga joayo.",
+"e": "The weather is nice today."
+},
+{
+"k": "괜히",
+"r": "gwaenhi",
+"m": "for no reason",
+"s": "괜히 불안해요.",
+"sr": "gwaenhi buranhaeyo.",
+"e": "I'm uneasy for no reason."
+},
+{
+"k": "이야기하다",
+"r": "iyagihada",
+"m": "to talk",
+"s": "친구와 이야기했어요.",
+"sr": "chinguwa iyagihaesseoyo.",
+"e": "I talked with my friend."
+},
+{
+"k": "취미",
+"r": "chwimi",
+"m": "hobby",
+"s": "제 취미는 음악 감상이에요.",
+"sr": "je chwimineun eumak gamsangieyo.",
+"e": "My hobby is listening to music."
+},
+{
+"k": "공부하다",
+"r": "gongbuhada",
+"m": "to study",
+"s": "도서관에서 공부해요.",
+"sr": "doseogwaneseo gongbuhaeyo.",
+"e": "I study at the library."
+},
+{
+"k": "잘생기다",
+"r": "jalsaenggida",
+"m": "to be handsome",
+"s": "그 배우는 정말 잘생겼어요.",
+"sr": "geu baeuneun jeongmal jalsaenggyeosseoyo.",
+"e": "That actor is really handsome."
+},
+{
+"k": "바람",
+"r": "baram",
+"m": "wind",
+"s": "바람이 많이 불어요.",
+"sr": "barami mani bureoyo.",
+"e": "The wind is blowing hard."
+},
+{
+"k": "표",
+"r": "pyo",
+"m": "ticket",
+"s": "표 두 장 주세요.",
+"sr": "pyo du jang juseyo.",
+"e": "Two tickets, please."
+},
+{
+"k": "응원하다",
+"r": "eungwonhada",
+"m": "to cheer for",
+"s": "저는 그 팀을 응원해요.",
+"sr": "jeoneun geu timeul eungwonhaeyo.",
+"e": "I cheer for that team."
+},
+{
+"k": "미안하다",
+"r": "mianhada",
+"m": "to be sorry",
+"s": "늦어서 미안해요.",
+"sr": "neujeoseo mianhaeyo.",
+"e": "I'm sorry for being late."
+},
+{
+"k": "샤워하다",
+"r": "syawohada",
+"m": "to shower",
+"s": "자기 전에 샤워해요.",
+"sr": "jagi jeone syawohaeyo.",
+"e": "I shower before bed."
+},
+{
+"k": "편하다",
+"r": "pyeonhada",
+"m": "to be comfortable",
+"s": "이 의자는 정말 편해요.",
+"sr": "i uijaneun jeongmal pyeonhaeyo.",
+"e": "This chair is really comfortable."
+},
+{
+"k": "창문",
+"r": "changmun",
+"m": "window",
+"s": "창문을 닫아도 될까요?",
+"sr": "changmuneul dadado doelkkayo?",
+"e": "May I close the window?"
+},
+{
+"k": "느리다",
+"r": "neurida",
+"m": "to be slow",
+"s": "인터넷이 너무 느려요.",
+"sr": "inteonesi neomu neuryeoyo.",
+"e": "The internet is too slow."
+},
+{
+"k": "열다",
+"r": "yeolda",
+"m": "to open",
+"s": "창문 좀 열어 주세요.",
+"sr": "changmun jom yeoreo juseyo.",
+"e": "Please open the window."
+},
+{
+"k": "앉다",
+"r": "anda",
+"m": "to sit",
+"s": "여기 앉으세요.",
+"sr": "yeogi anjeuseyo.",
+"e": "Please sit here."
+},
+{
+"k": "놀다",
+"r": "nolda",
+"m": "to play, to hang out",
+"s": "친구들과 놀았어요.",
+"sr": "chingudeulgwa norasseoyo.",
+"e": "I hung out with friends."
+},
+{
+"k": "사진",
+"r": "sajin",
+"m": "photo",
+"s": "사진을 찍어 주세요.",
+"sr": "sajineul jjigeo juseyo.",
+"e": "Please take a photo."
+},
+{
+"k": "많이",
+"r": "mani",
+"m": "a lot",
+"s": "물을 많이 마셔요.",
+"sr": "mureul mani masyeoyo.",
+"e": "I drink a lot of water."
+},
+{
+"k": "좋아하다",
+"r": "joahada",
+"m": "to like",
+"s": "저는 케이팝을 좋아해요.",
+"sr": "jeoneun keipabeul joahaeyo.",
+"e": "I like K-pop."
+},
+{
+"k": "의자",
+"r": "uija",
+"m": "chair",
+"s": "의자에 앉으세요.",
+"sr": "uijae anjeuseyo.",
+"e": "Please sit in the chair."
+},
+{
+"k": "닫다",
+"r": "datda",
+"m": "to close",
+"s": "문을 닫아 주세요.",
+"sr": "muneul dada juseyo.",
+"e": "Please close the door."
+},
+{
+"k": "쇼핑",
+"r": "syoping",
+"m": "shopping",
+"s": "주말에 쇼핑하러 가요.",
+"sr": "jumare syopinghareo gayo.",
+"e": "I go shopping on weekends."
+},
+{
+"k": "바꾸다",
+"r": "bakkuda",
+"m": "to change, to exchange",
+"s": "자리를 바꿔도 될까요?",
+"sr": "jarireul bakkwodo doelkkayo?",
+"e": "May we switch seats?"
+},
+{
+"k": "깨끗하다",
+"r": "kkaekkeuthada",
+"m": "to be clean",
+"s": "방이 깨끗해요.",
+"sr": "bangi kkaekkeuthaeyo.",
+"e": "The room is clean."
+},
+{
+"k": "앞",
+"r": "ap",
+"m": "front",
+"s": "건물 앞에서 만나요.",
+"sr": "geonmul apeseo mannayo.",
+"e": "Let's meet in front of the building."
+},
+{
+"k": "입",
+"r": "ip",
+"m": "mouth",
+"s": "입을 크게 벌리세요.",
+"sr": "ibeul keuge beolliseyo.",
+"e": "Open your mouth wide."
+},
+{
+"k": "수고하셨습니다",
+"r": "sugohasyeotseumnida",
+"m": "thank you for your hard work",
+"s": "오늘도 수고하셨습니다.",
+"sr": "oneuldo sugohasyeotseumnida.",
+"e": "Thank you for your hard work today too."
+},
+{
+"k": "달력",
+"r": "dallyeok",
+"m": "calendar",
+"s": "달력에 일정을 적어요.",
+"sr": "dallyeoge iljeongeul jeogeoyo.",
+"e": "I write my schedule on the calendar."
+},
+{
+"k": "누구",
+"r": "nugu",
+"m": "who",
+"s": "누구세요?",
+"sr": "nuguseyo?",
+"e": "Who is it?"
+},
+{
+"k": "잘 먹겠습니다",
+"r": "jal meokgetseumnida",
+"m": "I will eat well (before a meal)",
+"s": "잘 먹겠습니다!",
+"sr": "jal meokgetseumnida!",
+"e": "Thank you for the meal!"
+},
+{
+"k": "아이스크림",
+"r": "aiseukeurim",
+"m": "ice cream",
+"s": "더워서 아이스크림을 먹었어요.",
+"sr": "deowoseo aiseukeurimeul meogeosseoyo.",
+"e": "It was hot, so I ate ice cream."
+},
+{
+"k": "길다",
+"r": "gilda",
+"m": "to be long",
+"s": "머리가 길어요.",
+"sr": "meoriga gireoyo.",
+"e": "My hair is long."
+},
+{
+"k": "예쁘다",
+"r": "yeppeuda",
+"m": "to be pretty",
+"s": "이 원피스 정말 예뻐요.",
+"sr": "i wonpiseu jeongmal yeppeoyo.",
+"e": "This dress is really pretty."
+},
+{
+"k": "영화",
+"r": "yeonghwa",
+"m": "movie",
+"s": "영화 보러 갈래요?",
+"sr": "yeonghwa boreo gallaeyo?",
+"e": "Do you want to go see a movie?"
+},
+{
+"k": "갈아타다",
+"r": "garatada",
+"m": "to transfer",
+"s": "시청역에서 갈아타세요.",
+"sr": "sicheongyeogeseo garataseyo.",
+"e": "Transfer at City Hall station."
+},
+{
+"k": "괜찮다",
+"r": "gwaenchanta",
+"m": "to be okay",
+"s": "저는 괜찮아요.",
+"sr": "jeoneun gwaenchanayo.",
+"e": "I'm okay."
+},
+{
+"k": "울다",
+"r": "ulda",
+"m": "to cry",
+"s": "영화를 보고 울었어요.",
+"sr": "yeonghwareul bogo ureosseoyo.",
+"e": "I cried watching the movie."
+},
+{
+"k": "낮다",
+"r": "natda",
+"m": "to be low",
+"s": "이 의자는 낮아요.",
+"sr": "i uijaneun najayo.",
+"e": "This chair is low."
+},
+{
+"k": "예약하다",
+"r": "yeyakada",
+"m": "to reserve",
+"s": "자리를 예약하고 싶어요.",
+"sr": "jarireul yeyakago sipeoyo.",
+"e": "I'd like to reserve a seat."
+},
+{
+"k": "시간",
+"r": "sigan",
+"m": "time",
+"s": "시간이 없어요.",
+"sr": "sigani eopseoyo.",
+"e": "I don't have time."
+},
+{
+"k": "아이",
+"r": "ai",
+"m": "child",
+"s": "아이가 공원에서 놀아요.",
+"sr": "aiga gongwoneseo norayo.",
+"e": "The child plays in the park."
+},
+{
+"k": "크다",
+"r": "keuda",
+"m": "to be big",
+"s": "이 옷은 저한테 너무 커요.",
+"sr": "i oseun jeohante neomu keoyo.",
+"e": "This outfit is too big for me."
+},
+{
+"k": "어떡해",
+"r": "eotteokae",
+"m": "what should I do",
+"s": "어떡해, 지갑을 잃어버렸어요!",
+"sr": "eotteokae, jigabeul ireobeoryeosseoyo!",
+"e": "Oh no, I lost my wallet!"
+},
+{
+"k": "웃다",
+"r": "utda",
+"m": "to laugh, to smile",
+"s": "그 사람은 잘 웃어요.",
+"sr": "geu sarameun jal useoyo.",
+"e": "That person laughs a lot."
+},
+{
+"k": "화장실",
+"r": "hwajangsil",
+"m": "restroom",
+"s": "화장실이 어디예요?",
+"sr": "hwajangsiri eodiyeyo?",
+"e": "Where is the restroom?"
+},
+{
+"k": "달리다",
+"r": "dallida",
+"m": "to run",
+"s": "아침마다 달려요.",
+"sr": "achimmada dallyeoyo.",
+"e": "I run every morning."
+},
+{
+"k": "건너다",
+"r": "geonneoda",
+"m": "to cross",
+"s": "길을 건널 때 조심하세요.",
+"sr": "gireul geonneol ttae josimhaseyo.",
+"e": "Be careful when you cross the street."
+},
+{
+"k": "잊다",
+"r": "itda",
+"m": "to forget",
+"s": "약속을 잊어버렸어요.",
+"sr": "yaksogeul ijeobeoryeosseoyo.",
+"e": "I forgot the appointment."
+},
+{
+"k": "만나다",
+"r": "mannada",
+"m": "to meet",
+"s": "내일 친구를 만나요.",
+"sr": "naeil chingureul mannayo.",
+"e": "I'm meeting a friend tomorrow."
+},
+{
+"k": "맞다",
+"r": "matda",
+"m": "to be right",
+"s": "맞아요, 저도 그렇게 생각해요.",
+"sr": "majayo, jeodo geureoke saenggakaeyo.",
+"e": "That's right, I think so too."
+},
+{
+"k": "비싸다",
+"r": "bissada",
+"m": "to be expensive",
+"s": "이 가방은 너무 비싸요.",
+"sr": "i gabangeun neomu bissayo.",
+"e": "This bag is too expensive."
+},
+{
+"k": "입다",
+"r": "ipda",
+"m": "to wear (clothes)",
+"s": "오늘은 뭘 입을까요?",
+"sr": "oneureun mwol ibeulkkayo?",
+"e": "What shall I wear today?"
+},
+{
+"k": "싫어하다",
+"r": "sireohada",
+"m": "to dislike",
+"s": "저는 벌레를 싫어해요.",
+"sr": "jeoneun beollereul sireohaeyo.",
+"e": "I dislike bugs."
+},
+{
+"k": "씻다",
+"r": "ssitda",
+"m": "to wash",
+"s": "손을 깨끗이 씻으세요.",
+"sr": "soneul kkaekkeusi ssiseuseyo.",
+"e": "Please wash your hands thoroughly."
+},
+{
+"k": "조금",
+"r": "jogeum",
+"m": "a little",
+"s": "조금만 주세요.",
+"sr": "jogeumman juseyo.",
+"e": "Just give me a little."
+},
+{
+"k": "덥다",
+"r": "deopda",
+"m": "to be hot (weather)",
+"s": "오늘 너무 더워요.",
+"sr": "oneul neomu deowoyo.",
+"e": "It's so hot today."
+},
+{
+"k": "적다",
+"r": "jeokda",
+"m": "to be few",
+"s": "오늘은 손님이 적어요.",
+"sr": "oneureun sonnimi jeogeoyo.",
+"e": "There are few customers today."
+},
+{
+"k": "회사",
+"r": "hoesa",
+"m": "company, workplace",
+"s": "회사에 일찍 도착했어요.",
+"sr": "hoesae iljjik dochakaesseoyo.",
+"e": "I arrived at the office early."
+},
+{
+"k": "평일",
+"r": "pyeongil",
+"m": "weekday",
+"s": "평일에는 바빠요.",
+"sr": "pyeongireneun bappayo.",
+"e": "I'm busy on weekdays."
+},
+{
+"k": "방",
+"r": "bang",
+"m": "room",
+"s": "방을 청소했어요.",
+"sr": "bangeul cheongsohaesseoyo.",
+"e": "I cleaned my room."
+},
+{
+"k": "싱겁다",
+"r": "singgeopda",
+"m": "to be bland",
+"s": "국이 좀 싱거워요.",
+"sr": "gugi jom singgeowoyo.",
+"e": "The soup is a bit bland."
+},
+{
+"k": "도착하다",
+"r": "dochakada",
+"m": "to arrive",
+"s": "서울에 도착했어요.",
+"sr": "seoure dochakaesseoyo.",
+"e": "I arrived in Seoul."
+},
+{
+"k": "믿다",
+"r": "mitda",
+"m": "to believe, to trust",
+"s": "저는 당신을 믿어요.",
+"sr": "jeoneun dangsineul mideoyo.",
+"e": "I trust you."
+},
+{
+"k": "운동하다",
+"r": "undonghada",
+"m": "to exercise",
+"s": "저녁마다 운동해요.",
+"sr": "jeonyeokmada undonghaeyo.",
+"e": "I exercise every evening."
+},
+{
+"k": "일어나다",
+"r": "ireonada",
+"m": "to get up",
+"s": "일곱 시에 일어나요.",
+"sr": "ilgop sie ireonayo.",
+"e": "I get up at seven."
+},
+{
+"k": "어디",
+"r": "eodi",
+"m": "where",
+"s": "어디에 가요?",
+"sr": "eodie gayo?",
+"e": "Where are you going?"
+},
+{
+"k": "가르치다",
+"r": "gareuchida",
+"m": "to teach",
+"s": "친구에게 영어를 가르쳐요.",
+"sr": "chinguege yeongeoreul gareuchyeoyo.",
+"e": "I teach my friend English."
+},
+{
+"k": "휴가",
+"r": "hyuga",
+"m": "vacation",
+"s": "다음 달에 휴가를 가요.",
+"sr": "daeum dare hyugareul gayo.",
+"e": "I'm taking a vacation next month."
+},
+{
+"k": "발음",
+"r": "bareum",
+"m": "pronunciation",
+"s": "발음이 정말 좋아요.",
+"sr": "bareumi jeongmal joayo.",
+"e": "Your pronunciation is really good."
+},
+{
+"k": "지갑",
+"r": "jigap",
+"m": "wallet",
+"s": "지갑을 잃어버렸어요.",
+"sr": "jigabeul ireobeoryeosseoyo.",
+"e": "I lost my wallet."
+},
+{
+"k": "이해하다",
+"r": "ihaehada",
+"m": "to understand",
+"s": "이 문장을 이해했어요.",
+"sr": "i munjangeul ihaehaesseoyo.",
+"e": "I understood this sentence."
+},
+{
+"k": "벌써",
+"r": "beolsseo",
+"m": "already",
+"s": "벌써 열 시예요.",
+"sr": "beolsseo yeol siyeyo.",
+"e": "It's already ten o'clock."
+},
+{
+"k": "편의점",
+"r": "pyeonuijeom",
+"m": "convenience store",
+"s": "편의점에서 물을 샀어요.",
+"sr": "pyeonuijeomeseo mureul sasseoyo.",
+"e": "I bought water at the convenience store."
+},
+{
+"k": "지하철",
+"r": "jihacheol",
+"m": "subway",
+"s": "지하철로 출근해요.",
+"sr": "jihacheollo chulgeunhaeyo.",
+"e": "I commute by subway."
+},
+{
+"k": "바다",
+"r": "bada",
+"m": "sea",
+"s": "바다를 보러 갔어요.",
+"sr": "badareul boreo gasseoyo.",
+"e": "I went to see the sea."
+},
+{
+"k": "가깝다",
+"r": "gakkapda",
+"m": "to be near",
+"s": "지하철역이 가까워요.",
+"sr": "jihacheollyeogi gakkawoyo.",
+"e": "The subway station is close."
+},
+{
+"k": "매일",
+"r": "maeil",
+"m": "every day",
+"s": "매일 한국어를 공부해요.",
+"sr": "maeil hangugeoreul gongbuhaeyo.",
+"e": "I study Korean every day."
+},
+{
+"k": "그렇다",
+"r": "geureota",
+"m": "to be so",
+"s": "그래요? 몰랐어요.",
+"sr": "geuraeyo? mollasseoyo.",
+"e": "Is that so? I didn't know."
+},
+{
+"k": "밝다",
+"r": "bakda",
+"m": "to be bright",
+"s": "방이 밝아요.",
+"sr": "bangi balgayo.",
+"e": "The room is bright."
+},
+{
+"k": "힘내다",
+"r": "himnaeda",
+"m": "to cheer up",
+"s": "힘내세요, 잘할 수 있어요.",
+"sr": "himnaeseyo, jalhal su isseoyo.",
+"e": "Cheer up, you can do it."
+},
+{
+"k": "부탁하다",
+"r": "butakada",
+"m": "to ask a favor",
+"s": "하나만 부탁해도 돼요?",
+"sr": "hanaman butakaedo dwaeyo?",
+"e": "May I ask one favor?"
+},
+{
+"k": "있다",
+"r": "itda",
+"m": "to exist, to have",
+"s": "시간 있어요?",
+"sr": "sigan isseoyo?",
+"e": "Do you have time?"
+},
+{
+"k": "가을",
+"r": "gaeul",
+"m": "autumn",
+"s": "가을 하늘이 높아요.",
+"sr": "gaeul haneuri nopayo.",
+"e": "The autumn sky is high."
+},
+{
+"k": "당연하다",
+"r": "dangyeonhada",
+"m": "to be natural, obvious",
+"s": "당연하죠!",
+"sr": "dangyeonhajyo!",
+"e": "Of course!"
+},
+{
+"k": "아프다",
+"r": "apeuda",
+"m": "to hurt, to be sick",
+"s": "머리가 아파요.",
+"sr": "meoriga apayo.",
+"e": "I have a headache."
+},
+{
+"k": "할인",
+"r": "harin",
+"m": "discount",
+"s": "오늘은 할인 행사를 해요.",
+"sr": "oneureun harin haengsareul haeyo.",
+"e": "There's a discount event today."
+},
+{
+"k": "도서관",
+"r": "doseogwan",
+"m": "library",
+"s": "도서관에서 책을 빌렸어요.",
+"sr": "doseogwaneseo chaegeul billyeosseoyo.",
+"e": "I borrowed a book from the library."
+},
+{
+"k": "무겁다",
+"r": "mugeopda",
+"m": "to be heavy",
+"s": "상자가 무거워요.",
+"sr": "sangjaga mugeowoyo.",
+"e": "The box is heavy."
+},
+{
+"k": "출발하다",
+"r": "chulbalhada",
+"m": "to depart",
+"s": "기차가 곧 출발해요.",
+"sr": "gichaga got chulbalhaeyo.",
+"e": "The train departs soon."
+},
+{
+"k": "도와주다",
+"r": "dowajuda",
+"m": "to help",
+"s": "도와주세요!",
+"sr": "dowajuseyo!",
+"e": "Please help me!"
+},
+{
+"k": "코",
+"r": "ko",
+"m": "nose",
+"s": "코가 막혔어요.",
+"sr": "koga makyeosseoyo.",
+"e": "My nose is stuffed up."
+},
+{
+"k": "가다",
+"r": "gada",
+"m": "to go",
+"s": "학교에 가요.",
+"sr": "hakgyoe gayo.",
+"e": "I go to school."
+},
+{
+"k": "춤",
+"r": "chum",
+"m": "dance",
+"s": "춤을 배우고 싶어요.",
+"sr": "chumeul baeugo sipeoyo.",
+"e": "I want to learn dance."
+},
+{
+"k": "사람",
+"r": "saram",
+"m": "person",
+"s": "이 동네에는 좋은 사람이 많아요.",
+"sr": "i dongneeneun joeun sarami manayo.",
+"e": "There are many nice people in this neighborhood."
+},
+{
+"k": "침대",
+"r": "chimdae",
+"m": "bed",
+"s": "침대에서 책을 읽어요.",
+"sr": "chimdaeeseo chaegeul ilgeoyo.",
+"e": "I read a book in bed."
+},
+{
+"k": "몇",
+"r": "myeot",
+"m": "how many",
+"s": "몇 시예요?",
+"sr": "myeot siyeyo?",
+"e": "What time is it?"
+},
+{
+"k": "슬프다",
+"r": "seulpeuda",
+"m": "to be sad",
+"s": "그 영화는 너무 슬퍼요.",
+"sr": "geu yeonghwaneun neomu seulpeoyo.",
+"e": "That movie is so sad."
+},
+{
+"k": "가게",
+"r": "gage",
+"m": "shop",
+"s": "집 앞에 가게가 있어요.",
+"sr": "jip ape gagega isseoyo.",
+"e": "There's a shop in front of my house."
+},
+{
+"k": "오빠",
+"r": "oppa",
+"m": "older brother (said by a woman)",
+"s": "오빠가 서울에 살아요.",
+"sr": "oppaga seoure sarayo.",
+"e": "My older brother lives in Seoul."
+},
+{
+"k": "약속",
+"r": "yaksok",
+"m": "promise, appointment",
+"s": "내일 저녁에 약속이 있어요.",
+"sr": "naeil jeonyeoge yaksogi isseoyo.",
+"e": "I have plans tomorrow evening."
+},
+{
+"k": "빨리",
+"r": "ppalli",
+"m": "quickly",
+"s": "빨리 오세요.",
+"sr": "ppalli oseyo.",
+"e": "Please come quickly."
+},
+{
+"k": "맵다",
+"r": "maepda",
+"m": "to be spicy",
+"s": "너무 매워서 물을 마셔요.",
+"sr": "neomu maewoseo mureul masyeoyo.",
+"e": "It's so spicy that I'm drinking water."
+},
+{
+"k": "정말",
+"r": "jeongmal",
+"m": "really",
+"s": "정말 예뻐요.",
+"sr": "jeongmal yeppeoyo.",
+"e": "It's really pretty."
+},
+{
+"k": "빨래하다",
+"r": "ppallaehada",
+"m": "to do laundry",
+"s": "일요일에 빨래해요.",
+"sr": "iryoire ppallaehaeyo.",
+"e": "I do laundry on Sundays."
+},
+{
+"k": "걱정하다",
+"r": "geokjeonghada",
+"m": "to worry",
+"s": "너무 걱정하지 마세요.",
+"sr": "neomu geokjeonghaji maseyo.",
+"e": "Don't worry too much."
+},
+{
+"k": "아침",
+"r": "achim",
+"m": "morning",
+"s": "아침에 일찍 일어나요.",
+"sr": "achime iljjik ireonayo.",
+"e": "I wake up early in the morning."
+},
+{
+"k": "부르다",
+"r": "bureuda",
+"m": "to sing, to call",
+"s": "노래를 불러 주세요.",
+"sr": "noraereul bulleo juseyo.",
+"e": "Please sing a song."
+},
+{
+"k": "설마",
+"r": "seolma",
+"m": "no way",
+"s": "설마 그럴 리가 없어요.",
+"sr": "seolma geureol riga eopseoyo.",
+"e": "No way, that can't be."
+},
+{
+"k": "건강",
+"r": "geongang",
+"m": "health",
+"s": "건강이 제일 중요해요.",
+"sr": "geongangi jeil jungyohaeyo.",
+"e": "Health is the most important thing."
+},
+{
+"k": "마트",
+"r": "mateu",
+"m": "supermarket",
+"s": "마트에서 장을 봐요.",
+"sr": "mateueseo jangeul bwayo.",
+"e": "I do my grocery shopping at the supermarket."
+},
+{
+"k": "유명하다",
+"r": "yumyeonghada",
+"m": "to be famous",
+"s": "이 카페는 유명해요.",
+"sr": "i kapeneun yumyeonghaeyo.",
+"e": "This cafe is famous."
+},
+{
+"k": "정류장",
+"r": "jeongryujang",
+"m": "bus stop",
+"s": "정류장에서 기다려요.",
+"sr": "jeongryujangeseo gidaryeoyo.",
+"e": "I'm waiting at the bus stop."
+},
+{
+"k": "젓가락",
+"r": "jeotgarak",
+"m": "chopsticks",
+"s": "젓가락질이 어려워요.",
+"sr": "jeotgarakjiri eoryeowoyo.",
+"e": "Using chopsticks is hard."
+},
+{
+"k": "청소하다",
+"r": "cheongsohada",
+"m": "to clean",
+"s": "주말에 집을 청소해요.",
+"sr": "jumare jibeul cheongsohaeyo.",
+"e": "I clean the house on weekends."
+},
+{
+"k": "동생",
+"r": "dongsaeng",
+"m": "younger sibling",
+"s": "동생이 저보다 키가 커요.",
+"sr": "dongsaengi jeoboda kiga keoyo.",
+"e": "My younger sibling is taller than me."
+},
+{
+"k": "갑자기",
+"r": "gapjagi",
+"m": "suddenly",
+"s": "갑자기 비가 와요.",
+"sr": "gapjagi biga wayo.",
+"e": "It suddenly started raining."
+},
+{
+"k": "차갑다",
+"r": "chagapda",
+"m": "to be cold to the touch",
+"s": "물이 너무 차가워요.",
+"sr": "muri neomu chagawoyo.",
+"e": "The water is too cold."
+},
+{
+"k": "조심하다",
+"r": "josimhada",
+"m": "to be careful",
+"s": "길이 미끄러우니까 조심하세요.",
+"sr": "giri mikkeureounikka josimhaseyo.",
+"e": "The road is slippery, so be careful."
+},
+{
+"k": "같이",
+"r": "gati",
+"m": "together",
+"s": "같이 가요.",
+"sr": "gati gayo.",
+"e": "Let's go together."
+},
+{
+"k": "충전하다",
+"r": "chungjeonhada",
+"m": "to charge",
+"s": "휴대폰을 충전해야 해요.",
+"sr": "hyudaeponeul chungjeonhaeya haeyo.",
+"e": "I need to charge my phone."
+},
+{
+"k": "어렵다",
+"r": "eoryeopda",
+"m": "to be difficult",
+"s": "한국어는 어려워요.",
+"sr": "hangugeoneun eoryeowoyo.",
+"e": "Korean is difficult."
+},
+{
+"k": "기차",
+"r": "gicha",
+"m": "train",
+"s": "기차 시간을 확인했어요.",
+"sr": "gicha siganeul hwaginhaesseoyo.",
+"e": "I checked the train time."
+},
+{
+"k": "좋다",
+"r": "jota",
+"m": "to be good",
+"s": "기분이 좋아요.",
+"sr": "gibuni joayo.",
+"e": "I feel good."
+},
+{
+"k": "다르다",
+"r": "dareuda",
+"m": "to be different",
+"s": "생각이 달라요.",
+"sr": "saenggagi dallayo.",
+"e": "Our thoughts are different."
+},
+{
+"k": "해",
+"r": "hae",
+"m": "sun",
+"s": "해가 지고 있어요.",
+"sr": "haega jigo isseoyo.",
+"e": "The sun is setting."
+},
+{
+"k": "높다",
+"r": "nopda",
+"m": "to be high",
+"s": "산이 정말 높아요.",
+"sr": "sani jeongmal nopayo.",
+"e": "The mountain is really high."
+},
+{
+"k": "배우다",
+"r": "baeuda",
+"m": "to learn",
+"s": "한국어를 배워요.",
+"sr": "hangugeoreul baewoyo.",
+"e": "I'm learning Korean."
+},
+{
+"k": "콘서트",
+"r": "konseoteu",
+"m": "concert",
+"s": "콘서트 표를 구했어요.",
+"sr": "konseoteu pyoreul guhaesseoyo.",
+"e": "I got concert tickets."
+},
+{
+"k": "멋있다",
+"r": "meositda",
+"m": "to be cool, to be stylish",
+"s": "배우가 정말 멋있어요.",
+"sr": "baeuga jeongmal meosisseoyo.",
+"e": "The actor is really cool."
+},
+{
+"k": "역",
+"r": "yeok",
+"m": "station",
+"s": "다음 역에서 내려요.",
+"sr": "daeum yeogeseo naeryeoyo.",
+"e": "I get off at the next station."
+},
+{
+"k": "지금",
+"r": "jigeum",
+"m": "now",
+"s": "지금 뭐 해요?",
+"sr": "jigeum mwo haeyo?",
+"e": "What are you doing now?"
+},
+{
+"k": "선물",
+"r": "seonmul",
+"m": "gift",
+"s": "친구에게 선물을 줬어요.",
+"sr": "chinguege seonmureul jwosseoyo.",
+"e": "I gave my friend a gift."
+},
+{
+"k": "길",
+"r": "gil",
+"m": "road, way",
+"s": "길을 잃었어요.",
+"sr": "gireul ireosseoyo.",
+"e": "I got lost."
+},
+{
+"k": "거울",
+"r": "geoul",
+"m": "mirror",
+"s": "거울을 보고 있어요.",
+"sr": "geoureul bogo isseoyo.",
+"e": "I'm looking in the mirror."
+},
+{
+"k": "빠르다",
+"r": "ppareuda",
+"m": "to be fast",
+"s": "시간이 너무 빨라요.",
+"sr": "sigani neomu ppallayo.",
+"e": "Time goes so fast."
+},
+{
+"k": "서다",
+"r": "seoda",
+"m": "to stand",
+"s": "버스 안에서 서 있었어요.",
+"sr": "beoseu aneseo seo isseosseoyo.",
+"e": "I was standing on the bus."
+},
+{
+"k": "쉽다",
+"r": "swipda",
+"m": "to be easy",
+"s": "이 문제는 쉬워요.",
+"sr": "i munjeneun swiwoyo.",
+"e": "This problem is easy."
+},
+{
+"k": "호텔",
+"r": "hotel",
+"m": "hotel",
+"s": "호텔을 예약했어요.",
+"sr": "hotereul yeyakaesseoyo.",
+"e": "I booked a hotel."
+},
+{
+"k": "흐리다",
+"r": "heurida",
+"m": "to be cloudy",
+"s": "오늘은 하늘이 흐려요.",
+"sr": "oneureun haneuri heuryeoyo.",
+"e": "The sky is cloudy today."
+},
+{
+"k": "다녀왔습니다",
+"r": "danyeowatseumnida",
+"m": "I'm back",
+"s": "다녀왔습니다!",
+"sr": "danyeowatseumnida!",
+"e": "I'm home!"
+},
+{
+"k": "시끄럽다",
+"r": "sikkeureopda",
+"m": "to be noisy",
+"s": "밖이 너무 시끄러워요.",
+"sr": "bakki neomu sikkeureowoyo.",
+"e": "It's so noisy outside."
+},
+{
+"k": "여행",
+"r": "yeohaeng",
+"m": "travel, trip",
+"s": "여행 가고 싶어요.",
+"sr": "yeohaeng gago sipeoyo.",
+"e": "I want to go on a trip."
+},
+{
+"k": "필요하다",
+"r": "piryohada",
+"m": "to need, to be necessary",
+"s": "우산이 필요해요.",
+"sr": "usani piryohaeyo.",
+"e": "I need an umbrella."
+},
+{
+"k": "국",
+"r": "guk",
+"m": "soup",
+"s": "국이 아직 뜨거워요.",
+"sr": "gugi ajik tteugeowoyo.",
+"e": "The soup is still hot."
+},
+{
+"k": "공원",
+"r": "gongwon",
+"m": "park",
+"s": "공원에 사람이 많아요.",
+"sr": "gongwone sarami manayo.",
+"e": "There are many people in the park."
+},
+{
+"k": "게임",
+"r": "geim",
+"m": "game",
+"s": "저녁에 게임을 해요.",
+"sr": "jeonyeoge geimeul haeyo.",
+"e": "I play games in the evening."
+},
+{
+"k": "긴장되다",
+"r": "ginjangdoeda",
+"m": "to be nervous",
+"s": "발표 전에 긴장돼요.",
+"sr": "balpyo jeone ginjangdwaeyo.",
+"e": "I get nervous before presentations."
+},
+{
+"k": "설레다",
+"r": "seolleda",
+"m": "to be fluttery with excitement",
+"s": "내일 여행이라서 설레요.",
+"sr": "naeil yeohaengiraseo seolleyo.",
+"e": "I'm excited because the trip is tomorrow."
+},
+{
+"k": "밥",
+"r": "bap",
+"m": "rice, meal",
+"s": "밥 먹었어요?",
+"sr": "bap meogeosseoyo?",
+"e": "Have you eaten?"
+},
+{
+"k": "늦다",
+"r": "neutda",
+"m": "to be late",
+"s": "죄송해요, 늦었어요.",
+"sr": "joesonghaeyo, neujeosseoyo.",
+"e": "Sorry, I'm late."
+},
+{
+"k": "요리하다",
+"r": "yorihada",
+"m": "to cook",
+"s": "주말에 요리하는 걸 좋아해요.",
+"sr": "jumare yorihaneun geol joahaeyo.",
+"e": "I like cooking on weekends."
+},
+{
+"k": "행복하다",
+"r": "haengbokada",
+"m": "to be happy",
+"s": "지금 정말 행복해요.",
+"sr": "jigeum jeongmal haengbokaeyo.",
+"e": "I'm really happy now."
+}
+];
+var START=Date.UTC(2026,10,11);
+function idx(){
+  var q=new URLSearchParams(location.search).get('day');
+  if(q!==null&&!isNaN(+q))return ((+q%WORDS.length)+WORDS.length)%WORDS.length;
+  var n=new Date(),t=Date.UTC(n.getFullYear(),n.getMonth(),n.getDate());
+  var d=Math.round((t-START)/864e5);
+  return ((d%WORDS.length)+WORDS.length)%WORDS.length;
+}
+var c=document.getElementById('c'),cur=-1;
+function $(i){return document.getElementById(i)}
+function render(){
+  var i=idx();if(i===cur)return;cur=i;var x=WORDS[i];
+  $('w').textContent=x.k;$('r').textContent=x.r;$('m').textContent=x.m;
+  $('s').textContent=x.s;$('sr').textContent=x.sr;$('e').textContent=x.e;
+  c.classList.remove('open');
+}
+c.addEventListener('click',function(){c.classList.toggle('open')});
+render();
+setInterval(render,30000);
+</script></body></html>
